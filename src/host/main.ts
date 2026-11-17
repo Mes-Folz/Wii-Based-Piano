@@ -38,7 +38,7 @@ function handle(e: NoteEvent): void {
 }
 
 // --- UI ----------------------------------------------------------------------
-const keyboard = new PianoKeyboard($('keyboard'), 36, 96, handle); // C2..C7
+const keyboard = new PianoKeyboard($('keyboard'), 21, 108, handle); // Full 88-key piano, A0..C8
 const computer = new ComputerKeyboardInput(handle, syncOctave);
 
 const clientId = localStorage.getItem('wii-piano-client') ?? createClientId();
@@ -114,7 +114,12 @@ window.setInterval(() => transport.send({ type: 'ping', sentAt: performance.now(
 
 function syncOctave(): void {
   $('oct-name').textContent = computer.baseName;
-  keyboard.setRange(36, 96);
+  if (window.matchMedia('(max-width: 700px)').matches) {
+    const low = computer.baseNote;
+    keyboard.setRange(low, Math.min(low + 24, 108));
+  } else {
+    keyboard.setRange(21, 108);
+  }
   keyboard.setLabels(computer.labels());
   for (const note of active) keyboard.setActive(note, true);
 }

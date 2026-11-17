@@ -2,6 +2,7 @@ import '../styles/main.css';
 import { PianoTransport } from '@shared/transport';
 import { createClientId } from '@shared/clientId';
 import type { ServerMessage } from '@shared/protocol';
+import { isBlackKey, midiToName } from '@shared/notes';
 
 const $ = <T extends HTMLElement>(id: string): T => document.getElementById(id) as T;
 const params = new URLSearchParams(location.search);
@@ -72,12 +73,46 @@ function noteOff(note: number, element: HTMLElement): void {
 function releaseHeldNotes(): void {
   document.querySelectorAll<HTMLElement>('.remote-key').forEach((button) => noteOff(Number(button.dataset.note), button));
 }
-document.querySelectorAll<HTMLButtonElement>('.remote-key').forEach((button) => {
-  const note = Number(button.dataset.note);
-  button.addEventListener('pointerdown', (event) => { event.preventDefault(); button.setPointerCapture(event.pointerId); noteOn(note, button); });
-  button.addEventListener('pointerup', () => noteOff(note, button));
-  button.addEventListener('pointercancel', () => noteOff(note, button));
-  button.addEventListener('lostpointercapture', () => noteOff(note, button));
+const keybed = $<HTMLElement>('remote-keys');
+let rangeLow = 48;
+function renderKeyboardRange(): void {
+  releaseHeldNotes();
+  const rangeHigh = rangeLow + 24;
+  const whiteCount = Array.from({ length: rangeHigh - rangeLow + 1 }, (_, i) => rangeLow + i).filter((n) => !isBlackKey(n)).length;
+  const whiteWidth = 100 / whiteCount;
+  keybed.style.setProperty('--white-count', String(whiteCount));
+  $('range-label').textContent = `${midiToName(rangeLow)}–${midiToName(rangeHigh)}`;
+  keybed.replaceChildren();
+  for (let note = rangeLow; note <= rangeHigh; note++) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `remote-key ${isBlackKey(note) ? 'black-key' : 'white-key'}`;
+    button.dataset.note = String(note);
+    button.setAttribute('aria-label', midiToName(note));
+    if (isBlackKey(note)) {
+      let whiteIndex = 0;
+      for (let n = rangeLow; n < note; n++) if (!isBlackKey(n)) whiteIndex++;
+      button.style.left = `${whiteIndex * whiteWidth}%`;
+    } else {
+      button.textContent = midiToName(note);
+      button.style.flex = `0 0 ${whiteWidth}%`;
+    }
+    keybed.append(button);
+    const keyNote = note;
+    button.addEventListener('pointerdown', (event) => { event.preventDefault(); button.setPointerCapture(event.pointerId); noteOn(keyNote, button); });
+    button.addEventListener('pointerup', () => noteOff(keyNote, button));
+    button.addEventListener('pointercancel', () => noteOff(keyNote, button));
+    button.addEventListener('lostpointercapture', () => noteOff(keyNote, button));
+  }
+}
+renderKeyboardRange();
+$('range-down').addEventListener('click', () => {
+  rangeLow = Math.max(21, rangeLow - 12);
+  renderKeyboardRange();
+});
+$('range-up').addEventListener('click', () => {
+  rangeLow = Math.min(84, rangeLow + 12);
+  renderKeyboardRange();
 });
 window.addEventListener('blur', releaseHeldNotes);
 document.addEventListener('visibilitychange', () => { if (document.hidden) window.dispatchEvent(new Event('blur')); });

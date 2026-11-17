@@ -7,16 +7,13 @@
     <p class="controller-help">If the Host is silent, tap “Press to start” on the Host screen.</p>
     <form id="join-form"><label>Room code <input id="room-input" maxlength="4" autocomplete="off" autocapitalize="characters" placeholder="ABCD" /></label><button class="pill primary" type="submit">Join</button></form>
     <div class="controller-latency" id="latency">Latency —</div>
+    <nav class="controller-range" aria-label="Keyboard range">
+      <button class="pill" id="range-down" type="button" aria-label="Move keyboard down one octave">‹</button>
+      <strong id="range-label">C3–C5</strong>
+      <button class="pill" id="range-up" type="button" aria-label="Move keyboard up one octave">›</button>
+    </nav>
     <section class="remote-piano" aria-label="Remote piano keys">
-      <div class="white-keys">
-        <button class="remote-key white-key" data-note="60">C4</button><button class="remote-key white-key" data-note="62">D4</button><button class="remote-key white-key" data-note="64">E4</button><button class="remote-key white-key" data-note="65">F4</button>
-        <button class="remote-key white-key" data-note="67">G4</button><button class="remote-key white-key" data-note="69">A4</button><button class="remote-key white-key" data-note="71">B4</button><button class="remote-key white-key" data-note="72">C5</button>
-      </div>
-      <button class="remote-key black-key" data-note="61" style="left:8.9%" aria-label="C sharp 4"></button>
-      <button class="remote-key black-key" data-note="63" style="left:21.4%" aria-label="D sharp 4"></button>
-      <button class="remote-key black-key" data-note="66" style="left:46.4%" aria-label="F sharp 4"></button>
-      <button class="remote-key black-key" data-note="68" style="left:58.9%" aria-label="G sharp 4"></button>
-      <button class="remote-key black-key" data-note="70" style="left:71.4%" aria-label="A sharp 4"></button>
+      <div class="white-keys" id="remote-keys"></div>
     </section>
   </main>
   <script type="module" src="./main.ts"></script>

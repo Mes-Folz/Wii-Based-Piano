@@ -15,8 +15,8 @@ const LAYOUT: Record<string, { offset: number; label: string }> = {
   Digit0: { offset: 27, label: '0' }, KeyP: { offset: 28, label: 'P' },
 };
 
-export const MIN_BASE = 36; // C2
-export const MAX_BASE = 60; // C4
+export const MIN_BASE = 21; // A0
+export const MAX_BASE = 84; // C6
 
 export class ComputerKeyboardInput {
   private base = 48; // C3
