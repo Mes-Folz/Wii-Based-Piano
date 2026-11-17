@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Piano</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎹</text></svg>" />
+</head>
+<body>
+  <main class="stage">
+    <header class="topbar">
+      <h1 class="title">Piano</h1>
+      <div class="group" role="radiogroup" aria-label="Instrument" id="instruments"></div>
+    </header>
+
+    <section class="screen" aria-live="polite">
+      <div class="readout" id="readout">Ready</div>
+      <div class="status" id="status"></div>
+    </section>
+
+    <section class="controls">
+      <div class="stepper">
+        <button class="pill" id="oct-down" aria-label="Octave down">‹</button>
+        <div class="stepper-value">Octave <strong id="oct-name">C3</strong></div>
+        <button class="pill" id="oct-up" aria-label="Octave up">›</button>
+      </div>
+      <label class="volume">Volume
+        <input type="range" id="volume" min="0" max="1" step="0.01" value="0.8" />
+      </label>
+    </section>
+
+    <section class="pairing panel" aria-label="Controller pairing">
+      <div><strong>Connect a controller</strong><p id="pair-status">Starting room…</p><div class="room-code" id="room-code">----</div><label class="network-picker" id="network-picker" hidden>Phone network<select id="network-address"></select></label><p id="controller-link"></p></div>
+      <img id="pair-qr" alt="Scan to connect a phone controller" width="132" height="132" />
+      <div class="latency" id="latency">Latency —</div>
+    </section>
+
+    <section class="tray"><div class="keyboard" id="keyboard"></div></section>
+
+    <footer class="hint">Play with Z–M and Q–P, or click and touch the keys. ← → changes octave.</footer>
+  </main>
+
+  <div class="overlay" id="start">
+    <div class="start-card">
+      <h2>Piano</h2>
+      <button class="pill big primary" id="start-btn">Press to start</button>
+      <p id="start-msg"></p>
+    </div>
+  </div>
+
+  <script type="module" src="./main.ts"></script>
+</body>
+</html>
